@@ -1,0 +1,40 @@
+/* fluid table */
+.folder-table-container {
+  
+}
+
+.folder-table-label-container {
+  padding-top: 20px;
+  padding-left: 20px;
+}
+
+.folder-table {
+  overflow-x: auto;
+  padding: 15px;
+  border-radius: 0px 0px 5px 5px;
+}
+
+.folder-table table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  float: left;
+}
+
+.folder-table th, .folder-table td {
+  text-align: center;
+  padding: 8px;
+  border-right: solid;
+  border-width: 1px 1.5px;
+  border-spacing: 1px;
+  border-color: rgba(128, 128, 128, 0.356);
+}
+
+.folder-table .time {
+  font-weight: 700;
+}
+
+.folder-table .firsttd {
+  font-weight: 700;
+}
