@@ -10,6 +10,8 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _dateFns = require("date-fns");
+
 require("./Table.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -44,18 +46,19 @@ var Table = function (_PureComponent) {
             var classNames = e.target.className.split(" ");
             var selectedCol1 = classNames[1];
             var selectedColIndex = parseInt(classNames[2]);
+            var neighborColIndex = void 0;
 
             if (_this.tableData.length === 1) {
-                selectedColIndex = 0;
+                neighborColIndex = 0;
             } else if (selectedColIndex === _this.tableData.length - 1) {
-                selectedColIndex -= 1;
+                neighborColIndex = selectedColIndex - 1;
             } else {
-                selectedColIndex += 1;
+                neighborColIndex = selectedColIndex + 1;
             }
-
+            console.log(e.target.dataset.unixtime, _this.tableData[neighborColIndex].time);
             _this.props.updateTableState({
                 selectedCol1: selectedCol1,
-                selectedCol2: _this.tableData[selectedColIndex].time
+                selectedCol2: _this.tableData[neighborColIndex].time
             });
         };
 
@@ -81,41 +84,52 @@ var Table = function (_PureComponent) {
 
                 {
                     return measurements.map(function (m, i) {
-                        return _react2.default.createElement(TableRow, { key: m, m: m, i: i });
+                        return _react2.default.createElement(TableRow, { key: m, m: m, rowIndex: i });
                     });
                 }
             };
 
+            // creates the table row by row
             var TableRow = function TableRow(_ref2) {
                 var m = _ref2.m,
-                    i = _ref2.i;
+                    rowIndex = _ref2.rowIndex;
                 return _react2.default.createElement(
                     "tr",
                     {
                         key: m + 1,
                         style: {
-                            background: i % 2 === 0 ? "#EEEEEE" : "white"
+                            background: rowIndex % 2 === 0 ? "#EEEEEE" : "white"
                         } },
                     // first cell in the row is measurement label
-                    m === "time" ? _react2.default.createElement("td", { className: m, key: m }) : _react2.default.createElement(
+                    m === "time" ? _react2.default.createElement("td", { className: "folder-table-" + m, key: m }) : _react2.default.createElement(
                         "td",
-                        { className: m + " " + "firsttd",
+                        { className: "folder-table-" + m + " " + "firsttd",
                             key: m,
                             onClick: _this2.measurementOnClick
                         },
                         m
                     ),
-                    _this2.tableData.map(function (data, index) {
-                        var curTime = _this2.tableData[index].time;
+                    _this2.tableData.map(function (data, colIndex) {
+                        var curTime = _this2.tableData[colIndex].time;
+                        var cellText = void 0;
+
+                        if (rowIndex === 0) {
+                            var date = new Date(curTime * 1000);
+                            cellText = (0, _dateFns.format)(date, "hh:MMA");
+                        } else {
+                            cellText = data[m];
+                        }
+
                         return _react2.default.createElement(
                             "td",
                             {
-                                className: m + " " + curTime + " " + (index + "td"),
-                                key: index,
+                                className: "folder-table-" + m + " " + curTime + " " + (colIndex + "td"),
+                                "data-unixtime": curTime,
+                                key: colIndex,
                                 onClick: _this2.colOnClick,
                                 style: _this2.props.selectedCol1 === curTime || _this2.props.selectedCol2 === curTime ? { background: "rgba(247, 173, 229, 0.3)" } : {}
                             },
-                            data[m]
+                            cellText
                         );
                     })
                 );
