@@ -8,7 +8,7 @@ class App extends Component {
         super(props);
         this.state = {
             data: {
-                data: [{ time: "11:00pm", m1: "54", m2: "443" }],
+                data: [{ time: 14324324, m1: 54, m2: 443 }, { time: 14394324, m1: 45, m2: 403 }],
                 keys: ["time", "m1", "m2"]
             }
         }
@@ -22,11 +22,9 @@ class App extends Component {
         });
 
         let json = JSON.parse(jsonStr)
-        console.log(json)
         this.setState({
             data: json
         })
-        console.log(this.state)
     }
 
     updateAbgTableState() {
@@ -46,13 +44,12 @@ class App extends Component {
     }
 
     render() {
-        console.log(this.state)
         return (
             <>
-                <div>Pass in data in the form: {'{data: [{time: "1pm", m1: "54", m2:"443" }], keys: ["time", "m1", "m2"]} '}</div>
+                <div>Pass in data in the form: {'{data: [{time: "156565656", m1: "54", m2:"443" }, {time: "165465466546", m1: "54", m2:"443" }], keys: ["time", "m1", "m2"]} '}</div>
                 <form onSubmit={this.handleSubmit}>
                     <input style={{
-                        height: "30px",
+                        height: "50px",
                         width: "50%",
                         fontSize: "14pt"
                     }} placeholder="data" type="text" ref={(element) => { this.data = element }} />

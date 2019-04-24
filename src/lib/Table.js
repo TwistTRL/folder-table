@@ -1,4 +1,5 @@
 import React, { PureComponent } from "react";
+import { format } from 'date-fns';
 import "./Table.css"
 
 // data = [{time: int, measurement1: int, measurement2: int...}]
@@ -10,7 +11,7 @@ class Table extends PureComponent {
         this.tableKeys = this.props.data.keys
         this.tableData = this.props.data.data
     }
-    
+
     measurementOnClick = (e) => {
         let measurementData = []
         this.tableData.map(data => {
@@ -25,18 +26,19 @@ class Table extends PureComponent {
         let classNames = e.target.className.split(" ")
         let selectedCol1 = classNames[1]
         let selectedColIndex = parseInt(classNames[2])
+        let neighborColIndex
 
         if (this.tableData.length === 1) {
-            selectedColIndex = 0
+            neighborColIndex = 0
         } else if (selectedColIndex === this.tableData.length - 1) {
-            selectedColIndex -= 1
+            neighborColIndex = selectedColIndex - 1
         } else {
-            selectedColIndex += 1
+            neighborColIndex = selectedColIndex + 1
         }
-
+        console.log(e.target.dataset.unixtime, this.tableData[neighborColIndex].time)
         this.props.updateTableState({
             selectedCol1: selectedCol1,
-            selectedCol2: this.tableData[selectedColIndex].time
+            selectedCol2: this.tableData[neighborColIndex].time
         })
     }
 
@@ -53,35 +55,46 @@ class Table extends PureComponent {
                 return (
                     measurements.map((m, i) => {
                         return (
-                            <TableRow key={m} m={m} i={i} />
+                            <TableRow key={m} m={m} rowIndex={i} />
                         )
                     })
                 )
             }
         }
 
-        const TableRow = ({ m, i }) => (
+        // creates the table row by row
+        const TableRow = ({ m, rowIndex }) => (
             <tr
                 key={m + 1}
                 style={{
-                    background: i % 2 === 0 ? "#EEEEEE" : "white"
+                    background: rowIndex % 2 === 0 ? "#EEEEEE" : "white"
                 }}>
                 {   // first cell in the row is measurement label
                     m === "time" ?
-                        <td className={m} key={m}></td> :
-                        <td className={`${m} ${"firsttd"}`}
+                        <td className={"folder-table-" + m} key={m}></td> :
+                        <td className={`${"folder-table-" + m} ${"firsttd"}`}
                             key={m}
                             onClick={this.measurementOnClick}
                         >
                             {m}
                         </td>
                 }
-                {this.tableData.map((data, index) => {
-                    let curTime = this.tableData[index].time
+                {this.tableData.map((data, colIndex) => {
+                    let curTime = this.tableData[colIndex].time
+                    let cellText
+
+                    if (rowIndex === 0) {
+                        let date = new Date(curTime * 1000)
+                        cellText = format(date, "hh:MMA")
+                    } else {
+                        cellText = data[m]
+                    }
+
                     return (
                         <td
-                            className={`${m} ${curTime} ${index + "td"}`}
-                            key={index}
+                            className={`${"folder-table-" + m} ${curTime} ${colIndex + "td"}`}
+                            data-unixtime={curTime}
+                            key={colIndex}
                             onClick={this.colOnClick}
                             style=
                             // double ternary statements needed because the first row's 
@@ -90,7 +103,7 @@ class Table extends PureComponent {
                                 this.props.selectedCol2 === curTime ?
                                 { background: "rgba(247, 173, 229, 0.3)" } : {}}
                         >
-                            {data[m]}
+                            {cellText}
                         </td>
                     )
                 })}
