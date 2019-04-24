@@ -24,7 +24,7 @@ class Table extends PureComponent {
 
     colOnClick = (e) => {
         let classNames = e.target.className.split(" ")
-        let selectedCol1 = classNames[1]
+        let selectedCol1 = Number(classNames[1])
         let selectedColIndex = parseInt(classNames[2])
         let neighborColIndex
 
@@ -35,7 +35,7 @@ class Table extends PureComponent {
         } else {
             neighborColIndex = selectedColIndex + 1
         }
-        console.log(e.target.dataset.unixtime, this.tableData[neighborColIndex].time)
+
         this.props.updateTableState({
             selectedCol1: selectedCol1,
             selectedCol2: this.tableData[neighborColIndex].time
