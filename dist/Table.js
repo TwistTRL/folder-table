@@ -44,7 +44,7 @@ var Table = function (_PureComponent) {
 
         _this.colOnClick = function (e) {
             var classNames = e.target.className.split(" ");
-            var selectedCol1 = classNames[1];
+            var selectedCol1 = Number(classNames[1]);
             var selectedColIndex = parseInt(classNames[2]);
             var neighborColIndex = void 0;
 
@@ -55,7 +55,7 @@ var Table = function (_PureComponent) {
             } else {
                 neighborColIndex = selectedColIndex + 1;
             }
-            console.log(e.target.dataset.unixtime, _this.tableData[neighborColIndex].time);
+
             _this.props.updateTableState({
                 selectedCol1: selectedCol1,
                 selectedCol2: _this.tableData[neighborColIndex].time
