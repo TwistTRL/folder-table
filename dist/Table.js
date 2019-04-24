@@ -20,6 +20,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+// data = [{time: int, measurement1: int, measurement2: int...}]
+// key = [time, measurement1, meansurement2...]
 var Table = function (_PureComponent) {
     _inherits(Table, _PureComponent);
 
@@ -43,7 +45,9 @@ var Table = function (_PureComponent) {
             var selectedCol1 = classNames[1];
             var selectedColIndex = parseInt(classNames[2]);
 
-            if (selectedColIndex == _this.tableData.length - 1) {
+            if (_this.tableData.length === 1) {
+                selectedColIndex = 0;
+            } else if (selectedColIndex === _this.tableData.length - 1) {
                 selectedColIndex -= 1;
             } else {
                 selectedColIndex += 1;
@@ -68,6 +72,9 @@ var Table = function (_PureComponent) {
             if (!this.props.data) {
                 return null;
             }
+
+            this.tableKeys = this.props.data.keys;
+            this.tableData = this.props.data.data;
 
             var TableBody = function TableBody(_ref) {
                 var measurements = _ref.measurements;
@@ -113,21 +120,22 @@ var Table = function (_PureComponent) {
                     })
                 );
             };
+
             return _react2.default.createElement(
                 "div",
-                { className: "fluids-table-container" },
+                { className: "folder-table-container" },
                 _react2.default.createElement(
                     "div",
                     {
-                        className: "fluids-table",
+                        className: "folder-table",
                         style: { overflowX: "auto" }
                     },
                     _react2.default.createElement(
                         "table",
-                        { key: "fluids-table" },
+                        { key: "folder-table" },
                         _react2.default.createElement(
                             "tbody",
-                            { key: "fluids-table-body" },
+                            { key: "folder-table-body" },
                             _react2.default.createElement(TableBody, { measurements: this.tableKeys })
                         )
                     ),
