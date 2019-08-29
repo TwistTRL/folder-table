@@ -34,12 +34,19 @@ var Table = function (_PureComponent) {
 
         _this.measurementOnClick = function (e) {
             var measurementData = [];
+
+            // update the store
             _this.tableData.map(function (data) {
-                measurementData.push([data["time"], data[e.target.className]]);
+                measurementData.push({
+                    time: data["time"],
+                    value: data[e.target.dataset.rowlabel]
+                });
             });
 
-            _this.props.updateTableState(e.target.className);
-            alert(e.target.className + " " + measurementData);
+            _this.props.updateTableState({
+                selectedMeasurement: e.target.dataset.rowlabel,
+                measurementData: measurementData
+            });
         };
 
         _this.colOnClick = function (e) {
@@ -104,6 +111,7 @@ var Table = function (_PureComponent) {
                     m === "time" ? _react2.default.createElement("td", { className: "folder-table-" + m, key: m }) : _react2.default.createElement(
                         "td",
                         { className: "folder-table-" + m + " " + "firsttd",
+                            "data-rowlabel": m,
                             key: m,
                             onClick: _this2.measurementOnClick
                         },

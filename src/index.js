@@ -46,7 +46,6 @@ class App extends Component {
             ...this.state,
             ...newState
         })
-        console.log(newState)
     }
 
     selectedMeasurement() {
