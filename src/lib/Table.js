@@ -14,12 +14,16 @@ class Table extends PureComponent {
 
     measurementOnClick = (e) => {
         let measurementData = []
+
+        // update the store
         this.tableData.map(data => {
-            measurementData.push([data["time"], data[e.target.className]])
+            measurementData.push({
+                time: data["time"],
+                value: data[e.target.dataset.rowlabel]
+            })
         })
 
-        this.props.updateTableState(e.target.className)
-        alert(e.target.className + " " + measurementData)
+        this.props.updateTableState(e.target.dataset.rowlabel)
     }
 
     colOnClick = (e) => {
@@ -73,6 +77,7 @@ class Table extends PureComponent {
                     m === "time" ?
                         <td className={"folder-table-" + m} key={m}></td> :
                         <td className={`${"folder-table-" + m} ${"firsttd"}`}
+                            data-rowlabel={m}
                             key={m}
                             onClick={this.measurementOnClick}
                         >

@@ -52,14 +52,6 @@ class App extends Component {
 
     }
 
-    selectedCol1() {
-
-    }
-
-    selectedCol2() {
-
-    }
-
     render() {
         return (
             <>
