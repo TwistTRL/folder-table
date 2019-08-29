@@ -23,7 +23,10 @@ class Table extends PureComponent {
             })
         })
 
-        this.props.updateTableState(e.target.dataset.rowlabel)
+        this.props.updateTableState({
+            selectedMeasurement: e.target.dataset.rowlabel,
+            measurementData: measurementData
+        })
     }
 
     colOnClick = (e) => {
