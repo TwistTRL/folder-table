@@ -44,8 +44,8 @@ var Table = function (_PureComponent) {
             });
 
             _this.props.updateTableState({
-                selectedMeasurement: e.target.dataset.rowlabel,
-                measurementData: measurementData
+                name: e.target.dataset.rowlabel,
+                data: measurementData
             });
         };
 
