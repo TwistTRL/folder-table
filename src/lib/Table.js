@@ -24,8 +24,8 @@ class Table extends PureComponent {
         })
 
         this.props.updateTableState({
-            selectedMeasurement: e.target.dataset.rowlabel,
-            measurementData: measurementData
+            name: e.target.dataset.rowlabel,
+            data: measurementData
         })
     }
 
