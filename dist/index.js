@@ -4,10 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Table = require("./Table");
+var _TableBundle = require("./TableBundle");
 
-var _Table2 = _interopRequireDefault(_Table);
+var _TableBundle2 = _interopRequireDefault(_TableBundle);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = _Table2.default;
+exports.default = _TableBundle2.default;
