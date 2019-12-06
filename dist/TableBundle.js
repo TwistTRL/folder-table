@@ -36,6 +36,7 @@ var TableBundle = function (_PureComponent) {
     value: function render() {
       var _props = this.props,
           data = _props.data,
+          keys = _props.keys,
           dtWindow = _props.dtWindow,
           updateTableState = _props.updateTableState,
           selectedMeasurement = _props.selectedMeasurement,

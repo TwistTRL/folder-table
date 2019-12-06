@@ -5,6 +5,7 @@ class TableBundle extends PureComponent {
   render() {
     const {
       data,
+      keys,
       dtWindow,
       updateTableState,
       selectedMeasurement,
