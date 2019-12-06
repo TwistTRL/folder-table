@@ -52,8 +52,8 @@ class Table extends PureComponent {
     }
 
     let { selectedCol1, selectedCol2 } = this.props;
-    this.tableKeys = this.props.data.keys;
-    this.tableData = this.props.data.data;
+    this.tableKeys = this.props.keys;
+    this.tableData = this.props.data;
 
     const TableBody = ({ measurements }) => {
       {
@@ -101,8 +101,7 @@ class Table extends PureComponent {
               data-unixtime={curTime}
               key={colIndex}
               onClick={this.colOnClick}
-              style=// double ternary statements needed because the first row's
-              // initial background is different than the rest
+              style=// initial background is different than the rest // double ternary statements needed because the first row's
               {
                 selectedCol1 === curTime || selectedCol2 === curTime
                   ? { background: "rgba(247, 173, 229, 0.3)" }

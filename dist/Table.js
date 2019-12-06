@@ -85,8 +85,8 @@ var Table = function (_PureComponent) {
           selectedCol1 = _props.selectedCol1,
           selectedCol2 = _props.selectedCol2;
 
-      this.tableKeys = this.props.data.keys;
-      this.tableData = this.props.data.data;
+      this.tableKeys = this.props.keys;
+      this.tableData = this.props.data;
 
       var TableBody = function TableBody(_ref) {
         var measurements = _ref.measurements;

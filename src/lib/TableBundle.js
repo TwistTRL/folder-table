@@ -19,6 +19,7 @@ class TableBundle extends PureComponent {
     return (
       <Table
         data={filteredData}
+        keys={keys}
         updateTableState={updateTableState}
         selectedMeasurement={selectedMeasurement}
         selectedCol1={selectedCol1}

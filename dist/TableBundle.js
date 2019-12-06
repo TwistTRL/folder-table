@@ -49,6 +49,7 @@ var TableBundle = function (_PureComponent) {
 
       return _react2.default.createElement(_Table2.default, {
         data: filteredData,
+        keys: keys,
         updateTableState: updateTableState,
         selectedMeasurement: selectedMeasurement,
         selectedCol1: selectedCol1,

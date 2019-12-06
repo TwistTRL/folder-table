@@ -76,7 +76,8 @@ class App extends Component {
           <button>UPDATE TABLE</button>
         </form>
         <Table
-          data={this.state.data}
+          data={this.state.data.data}
+          keys={this.state.data.keys}
           updateTableState={this.updateTableState}
           selectedMeasurement={this.selectedMeasurement}
           selectedCol1={this.state.selectedCol1}
