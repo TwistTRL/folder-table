@@ -1,2 +1,2 @@
-import TableBundle from "./TableBundle";
-export default TableBundle;
+import Table from "./Table";
+export default Table;

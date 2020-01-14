@@ -32,21 +32,22 @@ var Table = function (_PureComponent) {
 
     var _this = _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, props));
 
-    _this.measurementOnClick = function (e) {
-      var measurementData = [];
+    _this.rowLabelOnClick = function (e) {
+      if (!_this.props.handleRowLabelClick) {
+        return;
+      }
+
+      var rowData = [];
 
       // update the store
       _this.tableData.map(function (data) {
-        measurementData.push({
+        rowData.push({
           time: data["time"],
           value: data[e.target.dataset.rowlabel]
         });
       });
 
-      _this.props.updateTableState({
-        name: e.target.dataset.rowlabel,
-        data: measurementData
-      });
+      _this.props.handleRowLabelClick(e.target.dataset.rowlabel);
     };
 
     _this.colOnClick = function (e) {
@@ -54,6 +55,10 @@ var Table = function (_PureComponent) {
       var selectedCol1 = Number(classNames[1]);
       var selectedColIndex = parseInt(classNames[2]);
       var neighborColIndex = void 0;
+
+      if (!_this.props.handleColClick || isNaN(selectedCol1)) {
+        return;
+      }
 
       if (_this.tableData.length === 1) {
         neighborColIndex = 0;
@@ -63,7 +68,7 @@ var Table = function (_PureComponent) {
         neighborColIndex = selectedColIndex + 1;
       }
 
-      _this.props.updateTableState({
+      _this.props.handleColClick({
         selectedCol1: selectedCol1,
         selectedCol2: _this.tableData[neighborColIndex].time
       });
@@ -77,7 +82,7 @@ var Table = function (_PureComponent) {
     value: function render() {
       var _this2 = this;
 
-      if (!this.props.data) {
+      if (this.props.data.length < 1) {
         return null;
       }
 
@@ -89,10 +94,10 @@ var Table = function (_PureComponent) {
       this.tableData = this.props.data;
 
       var TableBody = function TableBody(_ref) {
-        var measurements = _ref.measurements;
+        var rowLabels = _ref.rowLabels;
 
         {
-          return measurements.map(function (m, i) {
+          return rowLabels.map(function (m, i) {
             return _react2.default.createElement(TableRow, { key: m, m: m, rowIndex: i });
           });
         }
@@ -111,38 +116,59 @@ var Table = function (_PureComponent) {
             }
           },
           // first cell in the row is measurement label
-          m === "time" ? _react2.default.createElement("td", { className: "folder-table-" + m, key: m }) : _react2.default.createElement(
+          m === "time" ? _react2.default.createElement(
+            "td",
+            { className: "folder-table-" + m, key: m },
+            " ",
+            "Time",
+            " "
+          ) : _react2.default.createElement(
             "td",
             {
               className: "folder-table-" + m + " " + "firsttd",
               "data-rowlabel": m,
               key: m,
-              onClick: _this2.measurementOnClick
+              onClick: _this2.rowLabelOnClick
             },
             m
           ),
           _this2.tableData.map(function (data, colIndex) {
-            var curTime = _this2.tableData[colIndex].time;
-            var cellText = void 0;
+            if (data !== undefined) {
+              var curTime = _this2.tableData[colIndex].time;
+              var cellText = void 0;
 
-            if (rowIndex === 0) {
-              var date = new Date(curTime * 1000);
-              cellText = (0, _dateFns.format)(date, "hh:MMA");
-            } else {
-              cellText = data[m];
+              if (rowIndex === 0) {
+                var date = new Date(curTime * 1000);
+
+                cellText = _react2.default.createElement(
+                  "div",
+                  { style: { fontSize: "9" } },
+                  " ",
+                  date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear().toString().substr(-2),
+                  " ",
+                  _react2.default.createElement("br", null),
+                  " ",
+                  (0, _dateFns.format)(date, "h:mma"),
+                  " "
+                );
+              } else {
+                cellText = data[m];
+              }
+
+              return _react2.default.createElement(
+                "td",
+                {
+                  className: "folder-table-" + m + " " + curTime + " " + (colIndex + "td"),
+                  "data-unixtime": curTime,
+                  key: colIndex,
+                  onClick: _this2.colOnClick,
+                  style:
+                  // initial background is different than the rest // double ternary statements needed because the first row's
+                  selectedCol1 === curTime || selectedCol2 === curTime ? { background: "rgba(247, 173, 229, 0.3)" } : {}
+                },
+                cellText
+              );
             }
-
-            return _react2.default.createElement(
-              "td",
-              {
-                className: "folder-table-" + m + " " + curTime + " " + (colIndex + "td"),
-                "data-unixtime": curTime,
-                key: colIndex,
-                onClick: _this2.colOnClick,
-                style: selectedCol1 === curTime || selectedCol2 === curTime ? { background: "rgba(247, 173, 229, 0.3)" } : {}
-              },
-              cellText
-            );
           })
         );
       };
@@ -159,7 +185,7 @@ var Table = function (_PureComponent) {
             _react2.default.createElement(
               "tbody",
               { key: "folder-table-body" },
-              _react2.default.createElement(TableBody, { measurements: this.tableKeys })
+              _react2.default.createElement(TableBody, { rowLabels: this.tableKeys })
             )
           ),
           _react2.default.createElement("br", { style: { clear: "both" } })

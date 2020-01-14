@@ -9,21 +9,22 @@ class Table extends PureComponent {
     super(props);
   }
 
-  measurementOnClick = e => {
-    let measurementData = [];
+  rowLabelOnClick = e => {
+    if (!this.props.handleRowLabelClick) {
+      return;
+    }
+
+    let rowData = [];
 
     // update the store
     this.tableData.map(data => {
-      measurementData.push({
+      rowData.push({
         time: data["time"],
         value: data[e.target.dataset.rowlabel]
       });
     });
 
-    this.props.updateTableState({
-      name: e.target.dataset.rowlabel,
-      data: measurementData
-    });
+    this.props.handleRowLabelClick(e.target.dataset.rowlabel);
   };
 
   colOnClick = e => {
@@ -31,6 +32,10 @@ class Table extends PureComponent {
     let selectedCol1 = Number(classNames[1]);
     let selectedColIndex = parseInt(classNames[2]);
     let neighborColIndex;
+
+    if (!this.props.handleColClick || isNaN(selectedCol1)) {
+      return;
+    }
 
     if (this.tableData.length === 1) {
       neighborColIndex = 0;
@@ -40,14 +45,14 @@ class Table extends PureComponent {
       neighborColIndex = selectedColIndex + 1;
     }
 
-    this.props.updateTableState({
+    this.props.handleColClick({
       selectedCol1: selectedCol1,
       selectedCol2: this.tableData[neighborColIndex].time
     });
   };
 
   render() {
-    if (!this.props.data) {
+    if (this.props.data.length < 1) {
       return null;
     }
 
@@ -55,9 +60,9 @@ class Table extends PureComponent {
     this.tableKeys = this.props.keys;
     this.tableData = this.props.data;
 
-    const TableBody = ({ measurements }) => {
+    const TableBody = ({ rowLabels }) => {
       {
-        return measurements.map((m, i) => {
+        return rowLabels.map((m, i) => {
           return <TableRow key={m} m={m} rowIndex={i} />;
         });
       }
@@ -73,44 +78,65 @@ class Table extends PureComponent {
       >
         {// first cell in the row is measurement label
         m === "time" ? (
-          <td className={"folder-table-" + m} key={m}></td>
+          <td className={"folder-table-" + m} key={m}>
+            {" "}
+            Time{" "}
+          </td>
         ) : (
           <td
             className={`${"folder-table-" + m} ${"firsttd"}`}
             data-rowlabel={m}
             key={m}
-            onClick={this.measurementOnClick}
+            onClick={this.rowLabelOnClick}
           >
             {m}
           </td>
         )}
         {this.tableData.map((data, colIndex) => {
-          let curTime = this.tableData[colIndex].time;
-          let cellText;
+          if (data !== undefined) {
+            let curTime = this.tableData[colIndex].time;
+            let cellText;
 
-          if (rowIndex === 0) {
-            let date = new Date(curTime * 1000);
-            cellText = format(date, "hh:MMA");
-          } else {
-            cellText = data[m];
+            if (rowIndex === 0) {
+              let date = new Date(curTime * 1000);
+
+              cellText = (
+                <div style={{ fontSize: "9" }}>
+                  {" "}
+                  {date.getMonth() +
+                    1 +
+                    "/" +
+                    date.getDate() +
+                    "/" +
+                    date
+                      .getFullYear()
+                      .toString()
+                      .substr(-2)}{" "}
+                  <br></br> {format(date, "h:mma")}{" "}
+                </div>
+              );
+            } else {
+              cellText = data[m];
+            }
+
+            return (
+              <td
+                className={`${"folder-table-" + m} ${curTime} ${colIndex +
+                  "td"}`}
+                data-unixtime={curTime}
+                key={colIndex}
+                onClick={this.colOnClick}
+                style={
+                  // initial background is different than the rest // double ternary statements needed because the first row's
+                  selectedCol1 === curTime || selectedCol2 === curTime
+                    ? { background: "rgba(247, 173, 229, 0.3)" }
+                    : {}
+                }
+              >
+                {cellText}
+              </td>
+            );
           }
-
-          return (
-            <td
-              className={`${"folder-table-" + m} ${curTime} ${colIndex + "td"}`}
-              data-unixtime={curTime}
-              key={colIndex}
-              onClick={this.colOnClick}
-              style=// initial background is different than the rest // double ternary statements needed because the first row's
-              {
-                selectedCol1 === curTime || selectedCol2 === curTime
-                  ? { background: "rgba(247, 173, 229, 0.3)" }
-                  : {}
-              }
-            >
-              {cellText}
-            </td>
-          );
         })}
       </tr>
     );
@@ -120,7 +146,7 @@ class Table extends PureComponent {
         <div className="folder-table" style={{ overflowX: "auto" }}>
           <table key="folder-table">
             <tbody key="folder-table-body">
-              <TableBody measurements={this.tableKeys} />
+              <TableBody rowLabels={this.tableKeys} />
             </tbody>
           </table>
           <br style={{ clear: "both" }} />

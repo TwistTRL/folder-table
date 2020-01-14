@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import Table from "./lib/Table";
+import Table from "./lib/";
 
 class App extends Component {
   constructor(props) {
@@ -51,6 +51,14 @@ class App extends Component {
 
   selectedMeasurement() {}
 
+  handleColClick = (e) => {
+    console.log(e)
+  }
+
+  handleRowLabelClick = (e) => {
+    console.log(e)
+  }
+
   render() {
     return (
       <>
@@ -78,8 +86,8 @@ class App extends Component {
         <Table
           data={this.state.data.data}
           keys={this.state.data.keys}
-          updateTableState={this.updateTableState}
-          selectedMeasurement={this.selectedMeasurement}
+          handleColClick={this.handleColClick}
+          handleRowLabelClick={this.handleRowLabelClick}
           selectedCol1={this.state.selectedCol1}
           selectedCol2={this.state.selectedCol2}
         />
