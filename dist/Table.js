@@ -70,7 +70,8 @@ var Table = function (_PureComponent) {
 
       _this.props.handleColClick({
         selectedCol1: selectedCol1,
-        selectedCol2: _this.tableData[neighborColIndex].time
+        selectedCol2: _this.tableData[neighborColIndex].time,
+        e: e
       });
     };
 
