@@ -47,7 +47,8 @@ class Table extends PureComponent {
 
     this.props.handleColClick({
       selectedCol1: selectedCol1,
-      selectedCol2: this.tableData[neighborColIndex].time
+      selectedCol2: this.tableData[neighborColIndex].time,
+      e: e
     });
   };
 
